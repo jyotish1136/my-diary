@@ -14,6 +14,7 @@ import UserExists from "./components/UserExists";
 import ShowAlert from "./components/ShowAlert";
 import UserDetailsForm from "./account-creation/UserDetailsForm";
 import { useEffect } from "react";
+import Footer from "./components/Footer";
 
 function App() {
   const { userAuthenticated } = useAuth();
@@ -58,6 +59,7 @@ function App() {
             <Route path="/show-alert" element={<ShowAlert />} />
           </Routes>
         </div>
+        <Footer />
       </Router>
     </PostListProvider>
   );
