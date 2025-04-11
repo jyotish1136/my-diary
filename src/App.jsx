@@ -6,14 +6,12 @@ import CreatePost from "./components/CreatePost";
 import Signup from "./account-creation/Signup";
 import PostContainer from "./components/PostContainer";
 import ProtectedRoute from "./components/ProtectedRoute";
-import UserProvider from "./store/user-provider";
 import PostListProvider from "./store/post-store-provider";
 import { useAuth } from "./context/AuthContext";
 import UserProfile from "./components/UserProfile";
 import UserExists from "./components/UserExists";
 import ShowAlert from "./components/ShowAlert";
 import UserDetailsForm from "./account-creation/UserDetailsForm";
-import { useEffect } from "react";
 import Footer from "./components/Footer";
 
 function App() {
