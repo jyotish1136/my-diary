@@ -70,7 +70,6 @@ const PostListProvider = ({ children }) => {
         { title: updatedTitle, content: updatedContent },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-
       setPostList((prevPosts) =>
         prevPosts.map((post) =>
           post.id === id
@@ -78,8 +77,6 @@ const PostListProvider = ({ children }) => {
             : post
         )
       );
-      if (response) {
-      }
       return response.data;
     } catch (error) {
       console.error("Error updating post:", error);

@@ -3,8 +3,8 @@ import { useAuth } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../store/user-provider";
 import { usePost } from "../store/post-store-provider";
+import KebabMenuProfile from "./KebabMenuProfile";
 const UserProfile = () => {
-  const [editModalOpen, setEditModalOpen] = useState(false);
   const { logout, userAuthenticated } = useAuth();
   const navigate = useNavigate();
   const { getUser } = useUser();
@@ -60,6 +60,10 @@ const UserProfile = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-slate-100 dark:bg-gray-900 dark:text-white px-4">
       <div className="relative w-full max-w-md p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
+        <div className="absolute top-4 right-4 z-10">
+          <KebabMenuProfile user={user} />
+        </div>
+
         <div className="flex flex-col items-center mt-2">
           <h4 className="text-2xl font-semibold">
             {user?.firstname} {user?.lastname}

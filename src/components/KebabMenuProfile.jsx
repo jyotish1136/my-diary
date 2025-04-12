@@ -1,16 +1,26 @@
 import React, { useState } from "react";
 import { Menu, MenuItem, MenuButton } from "@headlessui/react";
 import { ThreeDotsVertical } from "react-bootstrap-icons";
-import { usePost } from "../store/post-store-provider";
-import EditPost from "./EditPost";
+import EditUser from "./EditUser";
+import { useUser } from "../store/user-provider";
+import { useAuth } from "../context/AuthContext";
 
-const KebabMenu = ({ post }) => {
-  const { deletePost } = usePost();
+const KebabMenuProfile = ({ user }) => {
+  const { deleteUser } = useUser();
+  const { logout } = useAuth();
   const [edit, setEdit] = useState(false);
+  const handleDelete = async (id) => {
+    try {
+      const response = await deleteUser();
+      if (response.status == 200) {
+        logout();
+      }
+    } catch (error) {}
+  };
   return (
     <>
       {edit ? (
-        <EditPost post={post} onCancel={() => setEdit(false)} />
+        <EditUser user={user} onCancel={() => setEdit(false)} />
       ) : (
         <Menu as="div" className="relative inline-block text-left">
           <MenuButton className="border-0 bg-transparent p-1 focus:outline-none">
@@ -32,7 +42,7 @@ const KebabMenu = ({ post }) => {
             <MenuItem>
               {({ active }) => (
                 <button
-                  onClick={() => deletePost(post.id)}
+                  onClick={() => handleDelete()}
                   className={`${
                     active ? "bg-gray-200 dark:bg-gray-700" : ""
                   } flex w-full px-4 py-2 text-left`}
@@ -48,4 +58,4 @@ const KebabMenu = ({ post }) => {
   );
 };
 
-export default KebabMenu;
+export default KebabMenuProfile;

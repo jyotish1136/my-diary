@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-
+import { FaGoogle } from "react-icons/fa";
 const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
+  const { signupWithGoogle } = useAuth();
   const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -85,7 +86,14 @@ const LoginForm = () => {
             {loading ? "Verifying..." : "Login"}
           </button>
         </form>
-
+        <div className="mt-4">
+          <button
+            onClick={signupWithGoogle}
+            className="w-full flex items-center justify-center bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg"
+          >
+            <FaGoogle className="mr-2" /> Login with Google
+          </button>
+        </div>
         <div className="text-center mt-4 text-sm text-gray-600 dark:text-gray-300">
           Don't have an account?{" "}
           <Link

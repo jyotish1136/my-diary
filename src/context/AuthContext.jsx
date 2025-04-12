@@ -3,11 +3,13 @@ import axiosInstance from "../api/axiosInstance";
 
 export const AuthContext = createContext({
   userAuthenticated: false,
+  setUserAuthenticated: () => {},
   login: async () => {},
   logout: () => {},
   signup: () => {},
   getToken: () => {},
   signupWithGoogle: () => {},
+  loginWithGoogle: () => {},
 });
 
 const AuthProvider = ({ children }) => {
@@ -17,7 +19,6 @@ const AuthProvider = ({ children }) => {
     const params = new URLSearchParams(window.location.search);
     const token = params.get("token");
     if (token && localStorage.getItem("jwtToken") !== token) {
-      console.log("Saving token globally:", token);
       setJwtToken(token);
       localStorage.setItem("jwtToken", token);
     }
@@ -72,6 +73,7 @@ const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         userAuthenticated,
+        setUserAuthenticated,
         login,
         logout,
         signup,

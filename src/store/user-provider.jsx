@@ -27,12 +27,12 @@ const UserProvider = ({ children }) => {
     }
   };
 
-  const updateUser = async (firstname, lastname, password) => {
+  const updateUser = async (firstname, lastname) => {
     const token = getToken();
     try {
       const response = await axiosInstance.put(
         "/user",
-        { firstname, lastname, password },
+        { firstname, lastname },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -44,9 +44,21 @@ const UserProvider = ({ children }) => {
       return { status: error.response?.status || 500, error: true };
     }
   };
+  const deleteUser = async () => {
+    const token = getToken();
+    try {
+      const response = await axiosInstance.delete("/user", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return response;
+    } catch (error) {
+      console.error("Deletion failed:", error.response?.data || error.message);
+      return { status: error.response?.status || 500, error: true };
+    }
+  };
 
   return (
-    <UserContext.Provider value={{ getUser, updateUser }}>
+    <UserContext.Provider value={{ getUser, updateUser, deleteUser }}>
       {children}
     </UserContext.Provider>
   );

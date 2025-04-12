@@ -11,6 +11,7 @@ import { useAuth } from "./context/AuthContext";
 import UserProfile from "./components/UserProfile";
 import UserExists from "./components/UserExists";
 import ShowAlert from "./components/ShowAlert";
+import EditUser from "./components/EditUser";
 import UserDetailsForm from "./account-creation/UserDetailsForm";
 import Footer from "./components/Footer";
 
@@ -53,7 +54,15 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route path="/userdetails" element={<UserDetailsForm />} />
+            <Route
+              path="/update-profile"
+              element={
+                <ProtectedRoute>
+                  <EditUser />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/user-details" element={<UserDetailsForm />} />
             <Route path="/show-alert" element={<ShowAlert />} />
           </Routes>
         </div>
