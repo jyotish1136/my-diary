@@ -30,8 +30,8 @@ const CreatePost = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-slate-950">
-      <div className="shadow-lg p-6 rounded-2xl max-w-md w-full bg-white dark:bg-gray-900">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+      <div className="shadow-lg p-6 rounded-2xl max-w-md w-full bg-white dark:bg-gray-800">
         <h4 className="text-center mb-4 text-black dark:text-white text-xl font-semibold">
           Create Post
         </h4>

@@ -10,11 +10,7 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ThemeProvider>
       <AuthProvider>
-        <UserProvider>
-          <PostListProvider>
-            <App />
-          </PostListProvider>
-        </UserProvider>
+        <App />
       </AuthProvider>
     </ThemeProvider>
   </StrictMode>

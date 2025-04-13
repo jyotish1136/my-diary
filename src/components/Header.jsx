@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { MdAccountCircle } from "react-icons/md";
 import { FaBars, FaTimes, FaMoon, FaSun } from "react-icons/fa";
@@ -9,7 +9,19 @@ const Header = () => {
   const { userAuthenticated, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest("#profile-menu")) {
+        setProfileMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
     <header className="fixed top-0 left-0 w-full bg-white dark:bg-gray-900 shadow-md p-4 z-50">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -44,27 +56,34 @@ const Header = () => {
               </Link>
             </>
           ) : (
-            <div className="relative group">
-              <button className="flex items-center text-gray-700 dark:text-white hover:text-blue-500 transition">
+            <div className="relative" id="profile-menu">
+              <button
+                onClick={() => setProfileMenuOpen((prev) => !prev)}
+                className="flex items-center text-gray-700 dark:text-white hover:text-blue-500 transition"
+              >
                 <MdAccountCircle className="h-8 w-8" />
               </button>
-              <div className="absolute right-0 mt-3 w-44 bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl shadow-lg opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 transform transition-all duration-200 ease-out z-50">
-                <Link
-                  to="/user-profile"
-                  className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-t-xl"
-                >
-                  Profile
-                </Link>
-                <button
-                  onClick={() => {
-                    logout();
-                    navigate("/");
-                  }}
-                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-b-xl"
-                >
-                  Logout
-                </button>
-              </div>
+              {profileMenuOpen && (
+                <div className="absolute right-0 mt-3 w-44 bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl shadow-lg z-50">
+                  <Link
+                    to="/user-profile"
+                    onClick={() => setProfileMenuOpen(false)}
+                    className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-t-xl"
+                  >
+                    Profile
+                  </Link>
+                  <button
+                    onClick={() => {
+                      logout();
+                      setProfileMenuOpen(false);
+                      navigate("/");
+                    }}
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-b-xl"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
             </div>
           )}
 
@@ -132,6 +151,7 @@ const Header = () => {
                     onClick={() => {
                       logout();
                       setMenuOpen(false);
+                      navigate("/");
                     }}
                     className="text-left text-red-600 hover:text-red-500 transition font-medium"
                   >

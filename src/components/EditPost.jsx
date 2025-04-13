@@ -10,7 +10,6 @@ const EditPost = ({ post, onCancel }) => {
 
   const handleUpdate = async () => {
     await updatePost(post.id, title, content);
-    navigate("/home");
   };
 
   return (

@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import axiosInstance from "../api/axiosInstance";
-import { useNavigate } from "react-router-dom";
 
 export const PostListContext = createContext({
   postList: [],
@@ -11,7 +10,6 @@ export const PostListContext = createContext({
 });
 
 const PostListProvider = ({ children }) => {
-  const { userAuthenticated } = useAuth();
   const [postList, setPostList] = useState([]);
   const { getToken } = useAuth();
   const loadPost = async () => {
@@ -29,7 +27,6 @@ const PostListProvider = ({ children }) => {
     loadPost();
   }, []);
   const addPost = async (title, content) => {
-    console.log("from context ", title, content);
     try {
       const token = getToken();
       const response = await axiosInstance.post(
@@ -37,11 +34,9 @@ const PostListProvider = ({ children }) => {
         { title, content },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-
       if (response.status === 200) {
         const newPost = response.data;
         setPostList((prevPosts) => [...prevPosts, newPost]);
-        loadPost();
         return response;
       }
     } catch (error) {

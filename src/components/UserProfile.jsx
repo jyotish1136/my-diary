@@ -7,17 +7,19 @@ import KebabMenuProfile from "./KebabMenuProfile";
 const UserProfile = () => {
   const { logout, userAuthenticated } = useAuth();
   const navigate = useNavigate();
-  const { getUser } = useUser();
+  const { getUser, user } = useUser();
   const { postList } = usePost();
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState(true);
+  const [inuser, setUser] = useState(user);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const response = await getUser();
-        setUser(response);
+        if (response.status == 200) {
+          setUser(response.data);
+        }
       } catch (err) {
         setError("Failed to load user data.");
       } finally {
@@ -61,14 +63,14 @@ const UserProfile = () => {
     <div className="flex items-center justify-center min-h-screen bg-slate-100 dark:bg-gray-900 dark:text-white px-4">
       <div className="relative w-full max-w-md p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
         <div className="absolute top-4 right-4 z-10">
-          <KebabMenuProfile user={user} />
+          <KebabMenuProfile user={inuser} />
         </div>
 
         <div className="flex flex-col items-center mt-2">
           <h4 className="text-2xl font-semibold">
-            {user?.firstname} {user?.lastname}
+            {inuser?.firstname} {inuser?.lastname}
           </h4>
-          <p className="text-gray-700 dark:text-white">{user?.username}</p>
+          <p className="text-gray-700 dark:text-white">{inuser?.username}</p>
         </div>
 
         <div className="flex justify-around my-6">

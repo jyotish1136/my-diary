@@ -5,43 +5,15 @@ import { usePost } from "../store/post-store-provider";
 import { useAuth } from "../context/AuthContext";
 
 const PostContainer = () => {
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { userAuthenticated } = useAuth();
   const { postList } = usePost();
-
-  useEffect(() => {
-    if (!userAuthenticated) return;
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 300); // Simulate loading time
-  }, [userAuthenticated, postList]);
 
   if (!userAuthenticated) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-900 px-4">
         <h1 className="text-center text-gray-400 text-lg">
           Please log in to view posts.
-        </h1>
-      </div>
-    );
-  }
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-900">
-        <h1 className="text-center text-gray-400 text-lg">Loading...</h1>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-900">
-        <h1 className="text-center text-red-500 text-lg">
-          Something went wrong. Try again.
         </h1>
       </div>
     );
