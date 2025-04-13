@@ -26,7 +26,7 @@ const Header = () => {
     <header className="fixed top-0 left-0 w-full bg-white dark:bg-gray-900 shadow-md p-4 z-50">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <Link
-          to="/home"
+          to="/"
           className="text-xl font-bold text-gray-900 dark:text-white"
         >
           My Notes

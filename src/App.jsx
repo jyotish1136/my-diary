@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
-import Home from "./components/Home";
+import Home from "./components/";
 import LoginForm from "./components/LoginForm";
 import CreatePost from "./components/CreatePost";
 import Signup from "./account-creation/Signup";
@@ -24,7 +24,7 @@ function App() {
       <div className="pt-16 dark:bg-slate-950">
         <Routes>
           <Route
-            path="/home"
+            path="/"
             element={
               !userAuthenticated ? (
                 <Home />

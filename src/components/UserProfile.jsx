@@ -74,7 +74,7 @@ const UserProfile = () => {
         </div>
 
         <div className="flex justify-around my-6">
-          <Link to="/home" className="text-center text-white">
+          <Link to="/" className="text-center text-white">
             <h5 className="text-2xl text-gray-700 dark:text-white font-bold">
               {postList.length}
             </h5>
@@ -87,7 +87,7 @@ const UserProfile = () => {
             className="px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition duration-300"
             onClick={() => {
               logout();
-              navigate("/home");
+              navigate("/");
             }}
           >
             Logout
