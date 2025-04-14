@@ -30,6 +30,7 @@ const AuthProvider = ({ children }) => {
   const REDIRECT_URI = process.env.REACT_APP_GOOGLE_REDIRECT_URI;
   const SCOPE = process.env.REACT_APP_GOOGLE_SCOPE;
   const STATE = process.env.REACT_APP_GOOGLE_STATE;
+  console.log(CLIENT_ID, REDIRECT_URI, SCOPE, STATE);
 
   const signupWithGoogle = () => {
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=${CLIENT_ID}&scope=${SCOPE}&state=${STATE}&redirect_uri=${REDIRECT_URI}&prompt=select_account`;
