@@ -26,12 +26,10 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     setUserAuthenticated(!!jwtToken);
   }, [jwtToken]);
-  const CLIENT_ID =
-    "261203815672-ntjjuqctbbgq9i5d5833du9vlrgtlvpv.apps.googleusercontent.com";
-  const REDIRECT_URI =
-    "https://my-notes-backend-qfpu.onrender.com/oauth2/google";
-  const STATE = "random_string";
-  const SCOPE = "profile email";
+  const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+  const REDIRECT_URI = process.env.REACT_APP_GOOGLE_REDIRECT_URI;
+  const SCOPE = process.env.REACT_APP_GOOGLE_SCOPE;
+  const STATE = process.env.REACT_APP_GOOGLE_STATE;
 
   const signupWithGoogle = () => {
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=${CLIENT_ID}&scope=${SCOPE}&state=${STATE}&redirect_uri=${REDIRECT_URI}&prompt=select_account`;
