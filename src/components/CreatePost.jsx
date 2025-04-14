@@ -17,7 +17,7 @@ const CreatePost = () => {
     try {
       const response = await addPost(title, content);
       if (response.status == 200) {
-        navigate("/home");
+        navigate("/");
       }
       setTitle("");
       setContent("");
