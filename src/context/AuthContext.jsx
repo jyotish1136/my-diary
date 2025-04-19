@@ -26,8 +26,8 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     setUserAuthenticated(!!jwtToken);
   }, [jwtToken]);
-  const CLIENT_ID = import.meta.env.CLIENT_ID;
-  const REDIRECT_URI = import.meta.env.REDIRECT_URI;
+  const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
+  const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
   const STATE = "random_string";
   const SCOPE = "profile email";
 
