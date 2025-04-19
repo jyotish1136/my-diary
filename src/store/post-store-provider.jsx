@@ -22,8 +22,13 @@ const PostListProvider = ({ children }) => {
       const response = await axiosInstance.get("/notes", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setPostList(response.data);
+      if (response.status == 200) {
+        setPostList(response.data);
+      } else {
+        setPostList([]);
+      }
     } catch (error) {
+      setPostList([]);
       console.error("Error loading posts:", error);
     }
   };

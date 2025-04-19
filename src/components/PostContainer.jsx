@@ -8,7 +8,6 @@ const PostContainer = () => {
   const { postList } = usePost();
   const { user } = useUser();
   const [filter, setFilter] = useState("all");
-
   const filteredPosts = postList.filter((post) => {
     if (filter === "mine") {
       return user?.id && post.userid === user.id;
