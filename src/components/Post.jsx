@@ -59,7 +59,6 @@ const Post = ({ post }) => {
       setLoading(false);
     }
   };
-
   const handleToggleComments = () => {
     setShowComments((prev) => !prev);
   };
@@ -89,7 +88,6 @@ const Post = ({ post }) => {
   };
 
   if (!currUser) return <p className="text-white text-2xl">Loading...</p>;
-  console.log(post.hashtags);
   return (
     <div className="w-full max-w-3xl mx-auto sm:mx-0">
       <div className=" bg-white dark:bg-gray-800 dark:text-white p-5 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300">
@@ -150,7 +148,7 @@ const Post = ({ post }) => {
             <div className="flex flex-wrap gap-1 p-2 bg-gray-100 dark:bg-gray-800 rounded-md">
               {post.hashtags.map((tag, index) => (
                 <span
-                  key={tag}
+                  key={index}
                   className={`px-2 py-0.5 text-xs font-semibold rounded-full
           ${
             index % 5 === 0

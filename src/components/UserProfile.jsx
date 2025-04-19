@@ -7,30 +7,31 @@ import KebabMenuProfile from "./KebabMenuProfile";
 
 const UserProfile = () => {
   const { logout, userAuthenticated } = useAuth();
+  const { postList } = usePost();
   const navigate = useNavigate();
   const { getUser } = useUser();
-  const { postList } = usePost();
-
   const [loading, setLoading] = useState(true);
   const [inuser, setUser] = useState(null);
   const [error, setError] = useState(null);
+  const filteredPosts = postList.filter((post) => {
+    return inuser?.id && post.userid === inuser.id;
+  });
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await getUser();
-        if (response.status === 200) {
-          setUser(response.data);
-        } else {
-          setError("User not found.");
-        }
-      } catch (err) {
-        setError("Failed to load user data.");
-      } finally {
-        setLoading(false);
+  const fetchUser = async () => {
+    try {
+      const response = await getUser();
+      if (response.status === 200) {
+        setUser(response.data);
+      } else {
+        setError("User not found.");
       }
-    };
-
+    } catch (err) {
+      setError("Failed to load user data.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
     fetchUser();
   }, []);
 
@@ -88,7 +89,7 @@ const UserProfile = () => {
         <div className="flex justify-around my-6">
           <Link to="/" className="text-center text-white">
             <h5 className="text-2xl text-gray-700 dark:text-white font-bold">
-              {postList.length}
+              {filteredPosts.length}
             </h5>
             <h6 className="text-gray-700 dark:text-white">Posts</h6>
           </Link>

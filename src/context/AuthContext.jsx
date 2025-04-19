@@ -26,9 +26,8 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     setUserAuthenticated(!!jwtToken);
   }, [jwtToken]);
-  const CLIENT_ID =
-    "261203815672-ntjjuqctbbgq9i5d5833du9vlrgtlvpv.apps.googleusercontent.com";
-  const REDIRECT_URI = "http://localhost:8080/oauth2/google";
+  const CLIENT_ID = import.meta.env.CLIENT_ID;
+  const REDIRECT_URI = import.meta.env.REDIRECT_URI;
   const STATE = "random_string";
   const SCOPE = "profile email";
 

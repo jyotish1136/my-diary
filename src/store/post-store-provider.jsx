@@ -27,19 +27,8 @@ const PostListProvider = ({ children }) => {
       console.error("Error loading posts:", error);
     }
   };
-  const loadPublicPost = async () => {
-    if (!userAuthenticated) return;
-    try {
-      const token = getToken();
-      const response = await axiosInstance.get("/auth/all-public-notes");
-      setPostList(response.data);
-    } catch (error) {
-      console.error("Error loading posts:", error);
-    }
-  };
   useEffect(() => {
     loadPost();
-    loadPublicPost();
   }, []);
   const addPost = async (title, content, privacy, hashtags) => {
     try {
