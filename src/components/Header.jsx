@@ -29,7 +29,7 @@ const Header = () => {
           to="/"
           className="text-xl font-bold text-gray-900 dark:text-white"
         >
-          My Notes
+          SayIt
         </Link>
 
         <div className="hidden md:flex items-center space-x-6">
@@ -37,7 +37,7 @@ const Header = () => {
             to="/create-post"
             className="text-gray-700 dark:text-white hover:text-blue-500 transition"
           >
-            Add Note
+            Add Post
           </Link>
 
           {!userAuthenticated ? (
@@ -48,12 +48,18 @@ const Header = () => {
               >
                 Login
               </Link>
-              <Link
+              {/* <Link
                 to="/signup"
                 className="text-gray-700 dark:text-white hover:text-blue-500 transition"
               >
                 Sign up
-              </Link>
+              </Link> */}
+              {/* <Link
+                to="/signup-guest"
+                className="text-gray-700 dark:text-white hover:text-blue-500 transition"
+              >
+                Sign up guest
+              </Link> */}
             </>
           ) : (
             <div className="relative" id="profile-menu">

@@ -14,15 +14,17 @@ const UserContext = createContext({
 const UserProvider = ({ children }) => {
   const { getToken, userAuthenticated } = useAuth();
   const [user, setUser] = useState(null);
+
   const getUser = async () => {
-    if (!userAuthenticated) return;
+    if (!userAuthenticated || !getToken()) return null;
     try {
       const token = getToken();
       const response = await axiosInstance.get("/user", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (response.status == 200) {
+      if (response.status === 200) {
         setUser(response.data);
+        localStorage.setItem("user", JSON.stringify(response.data));
         return response;
       }
     } catch (error) {
@@ -30,27 +32,24 @@ const UserProvider = ({ children }) => {
       return null;
     }
   };
+
   useEffect(() => {
     if (!user && getToken()) {
-      const response = getUser();
-      setUser(response.data);
+      getUser();
     }
-  }, []);
+  }, [userAuthenticated]);
+
   const updateUser = async (firstname, lastname) => {
     const token = getToken();
     try {
       const response = await axiosInstance.put(
         "/user",
-        {
-          firstname,
-          lastname,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { firstname, lastname },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-      if (response.status == 200) {
+      if (response.status === 200) {
         setUser(response.data);
+        localStorage.setItem("user", JSON.stringify(response.data));
         return response;
       }
     } catch (error) {
@@ -58,21 +57,18 @@ const UserProvider = ({ children }) => {
       return { status: error.response?.status || 500, error: true };
     }
   };
+
   const updateUsernamePassword = async (username, password) => {
     const token = getToken();
     try {
       const response = await axiosInstance.put(
         "/user",
-        {
-          username,
-          password,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { username, password },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-      if (response.status == 200) {
+      if (response.status === 200) {
         setUser(response.data);
+        localStorage.setItem("user", JSON.stringify(response.data));
         return response;
       }
     } catch (error) {
@@ -80,24 +76,28 @@ const UserProvider = ({ children }) => {
       return { status: error.response?.status || 500, error: true };
     }
   };
+
   const deleteUser = async () => {
     const token = getToken();
     try {
       const response = await axiosInstance.delete("/user", {
         headers: { Authorization: `Bearer ${token}` },
       });
+      if (response.status === 200) {
+        setUser(null);
+        localStorage.removeItem("user");
+      }
       return response;
     } catch (error) {
       console.error("Deletion failed:", error.response?.data || error.message);
       return { status: error.response?.status || 500, error: true };
     }
   };
+
   const validateUser = async (username) => {
-    const token = getToken();
     try {
-      const response = await axiosInstance.get("/user/check-username", {
+      const response = await axiosInstance.get("/auth/check-username", {
         params: { username },
-        headers: { Authorization: `Bearer ${token}` },
       });
       return response;
     } catch (error) {
@@ -105,7 +105,10 @@ const UserProvider = ({ children }) => {
         "Validation failed:",
         error.response?.data || error.message
       );
-      return { status: error.response?.status || 500, data: { exists: false } };
+      return {
+        status: error.response?.status || 500,
+        data: { exists: false },
+      };
     }
   };
 

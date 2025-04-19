@@ -18,7 +18,7 @@ const LoginForm = () => {
     try {
       const success = await login(username, password);
       if (success.status == 200) {
-        navigate("/posts");
+        navigate("/");
       } else {
         setError("Invalid credentials, please try again.");
       }

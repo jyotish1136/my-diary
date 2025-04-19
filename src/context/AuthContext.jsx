@@ -6,7 +6,7 @@ export const AuthContext = createContext({
   setUserAuthenticated: () => {},
   login: async () => {},
   logout: () => {},
-  signup: () => {},
+  signup: async () => {},
   getToken: () => {},
   signupWithGoogle: () => {},
   loginWithGoogle: () => {},
@@ -28,8 +28,7 @@ const AuthProvider = ({ children }) => {
   }, [jwtToken]);
   const CLIENT_ID =
     "261203815672-ntjjuqctbbgq9i5d5833du9vlrgtlvpv.apps.googleusercontent.com";
-  const REDIRECT_URI =
-    "https://my-notes-backend-qfpu.onrender.com/oauth2/google";
+  const REDIRECT_URI = "http://localhost:8080/oauth2/google";
   const STATE = "random_string";
   const SCOPE = "profile email";
 
@@ -38,14 +37,17 @@ const AuthProvider = ({ children }) => {
     window.location.href = googleAuthUrl;
   };
 
-  const signup = async (firstname, lastname, username, email, password) => {
-    return await axiosInstance.post("/auth/signup", {
+  const signup = async (firstname, lastname, email, username, password) => {
+    const response = await axiosInstance.post("/auth/signup", {
       firstname,
       lastname,
-      username,
       email,
+      username,
       password,
     });
+    if (response.status == 200) {
+      return response;
+    }
   };
 
   const login = async (username, password) => {
@@ -67,6 +69,7 @@ const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem("jwtToken");
+    localStorage.removeItem("user");
     setJwtToken(null);
   };
 

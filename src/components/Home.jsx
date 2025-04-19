@@ -5,9 +5,9 @@ const Home = () => {
   return (
     <div className="min-h-screen flex flex-col w-full items-center justify-center dark:bg-gray-900 dark:text-white">
       <div className="text-center">
-        <h1 className="font-bold text-4xl mb-3">Welcome to My Notes</h1>
+        <h1 className="font-bold text-4xl mb-3">Welcome to SayIt</h1>
         <p className="text-lg">
-          Securely store, organize, and manage your notes with ease.
+          Securely store, organize, and manage your saying with ease.
         </p>
         <div className="mt-4 flex flex-row space-x-4 justify-center">
           <Link

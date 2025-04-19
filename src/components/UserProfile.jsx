@@ -4,21 +4,25 @@ import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../store/user-provider";
 import { usePost } from "../store/post-store-provider";
 import KebabMenuProfile from "./KebabMenuProfile";
+
 const UserProfile = () => {
   const { logout, userAuthenticated } = useAuth();
   const navigate = useNavigate();
-  const { getUser, user } = useUser();
+  const { getUser } = useUser();
   const { postList } = usePost();
+
   const [loading, setLoading] = useState(true);
-  const [inuser, setUser] = useState(user);
+  const [inuser, setUser] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const response = await getUser();
-        if (response.status == 200) {
+        if (response.status === 200) {
           setUser(response.data);
+        } else {
+          setError("User not found.");
         }
       } catch (err) {
         setError("Failed to load user data.");
@@ -26,6 +30,7 @@ const UserProfile = () => {
         setLoading(false);
       }
     };
+
     fetchUser();
   }, []);
 
@@ -67,6 +72,13 @@ const UserProfile = () => {
         </div>
 
         <div className="flex flex-col items-center mt-2">
+          {inuser?.avatar && (
+            <img
+              src={inuser.avatar}
+              alt="User Avatar"
+              className="w-20 h-20 rounded-full object-cover mb-4 border-4 border-white shadow-md"
+            />
+          )}
           <h4 className="text-2xl font-semibold">
             {inuser?.firstname} {inuser?.lastname}
           </h4>

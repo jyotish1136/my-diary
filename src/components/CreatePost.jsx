@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 const CreatePost = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [visibility, setVisibility] = useState("PUBLIC");
+  const [hashtags, setHashtags] = useState("");
   const [error, setError] = useState(false);
   const [uploading, setUploading] = useState(false);
   const { addPost } = usePost();
@@ -14,13 +16,21 @@ const CreatePost = () => {
     e.preventDefault();
     setUploading(true);
     setError(false);
+
+    const hashtagArray = hashtags
+      .split(" ")
+      .map((tag) => tag.trim())
+      .filter((tag) => tag);
+
     try {
-      const response = await addPost(title, content);
-      if (response.status == 200) {
+      const response = await addPost(title, content, visibility, hashtagArray);
+      if (response.status === 200) {
         navigate("/");
       }
       setTitle("");
       setContent("");
+      setVisibility("PUBLIC");
+      setHashtags("");
     } catch (error) {
       setError(true);
       console.error("Network error:", error);
@@ -64,6 +74,30 @@ const CreatePost = () => {
               onChange={(e) => setContent(e.target.value)}
               required
             />
+          </div>
+
+          <div className="mb-4">
+            <input
+              type="text"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+              placeholder="e.g hello post enjoy"
+              value={hashtags}
+              onChange={(e) => setHashtags(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 dark:text-white mb-1">
+              Post Visibility
+            </label>
+            <select
+              value={visibility}
+              onChange={(e) => setVisibility(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+            >
+              <option value="PUBLIC">Public</option>
+              <option value="PRIVATE">Private</option>
+            </select>
           </div>
 
           <button
