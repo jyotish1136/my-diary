@@ -113,7 +113,7 @@ const Post = ({ post }) => {
               </p>
             </div>
           </div>
-          {post.userid === user.id && <KebabMenu post={post} />}
+          {post.userId === user.id && <KebabMenu post={post} />}
         </div>
         <hr className="border-gray-200 dark:border-gray-600 my-2" />
         <div className="text-center">

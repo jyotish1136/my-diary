@@ -9,12 +9,11 @@ const PostContainer = () => {
   const { user } = useUser();
   const [filter, setFilter] = useState("all");
 
-  // Safer comparison using String coercion
   const filteredPosts = postList.filter((post) => {
     if (filter === "mine") {
       return user?.id && String(post.userId) === String(user.id);
     }
-    return true; // "all" selected
+    return true;
   });
 
   return (
