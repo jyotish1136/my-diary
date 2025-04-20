@@ -24,7 +24,6 @@ const UserProvider = ({ children }) => {
       });
       if (response.status === 200) {
         setUser(response.data);
-        localStorage.setItem("user", JSON.stringify(response.data));
         return response;
       }
     } catch (error) {
@@ -49,7 +48,6 @@ const UserProvider = ({ children }) => {
       );
       if (response.status === 200) {
         setUser(response.data);
-        localStorage.setItem("user", JSON.stringify(response.data));
         return response;
       }
     } catch (error) {
@@ -68,7 +66,6 @@ const UserProvider = ({ children }) => {
       );
       if (response.status === 200) {
         setUser(response.data);
-        localStorage.setItem("user", JSON.stringify(response.data));
         return response;
       }
     } catch (error) {
@@ -85,7 +82,6 @@ const UserProvider = ({ children }) => {
       });
       if (response.status === 200) {
         setUser(null);
-        localStorage.removeItem("user");
       }
       return response;
     } catch (error) {

@@ -7,34 +7,42 @@ export const PostListContext = createContext({
   addPost: async () => {},
   deletePost: async () => {},
   updatePost: async () => {},
-  manageLike: async () => {},
-  addComment: async () => {},
-  deleteComment: async () => {},
 });
 
 const PostListProvider = ({ children }) => {
   const [postList, setPostList] = useState([]);
   const { getToken, userAuthenticated } = useAuth();
   const loadPost = async () => {
-    if (!userAuthenticated) return;
+    if (!userAuthenticated) {
+      console.log("User not authenticated, skipping post load.");
+      return;
+    }
     try {
       const token = getToken();
+      if (!token) {
+        console.warn("No token found.");
+        return;
+      }
+
       const response = await axiosInstance.get("/notes", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (response.status == 200) {
+
+      if (response.status === 200) {
         setPostList(response.data);
       } else {
+        console.warn("Unexpected response status:", response.status);
         setPostList([]);
       }
     } catch (error) {
-      setPostList([]);
       console.error("Error loading posts:", error);
+      setPostList([]);
     }
   };
+
   useEffect(() => {
     loadPost();
-  }, []);
+  }, [userAuthenticated]);
   const addPost = async (title, content, privacy, hashtags) => {
     try {
       const token = getToken();
@@ -46,28 +54,11 @@ const PostListProvider = ({ children }) => {
       if (response.status === 200) {
         const newPost = response.data;
         setPostList((prevPosts) => [...prevPosts, newPost]);
+        console.log(response);
         return response;
       }
     } catch (error) {
       console.error("Error occurred during posting:", error);
-      return null;
-    }
-  };
-  const manageLike = async (userId, postId) => {
-    try {
-      const token = getToken();
-      const response = await axiosInstance.post(
-        "/likes",
-        { userId: userId, postId: postId },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      if (response.status === 200) {
-        return response;
-      }
-    } catch (error) {
-      console.error("Like update failed:", error);
       return null;
     }
   };
@@ -124,37 +115,6 @@ const PostListProvider = ({ children }) => {
     }
   };
 
-  const addComment = async (userId, postId, comment) => {
-    try {
-      const token = getToken();
-      const response = await axiosInstance.post(
-        "/comments",
-        { userId, postId, comment },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      return response;
-    } catch (error) {
-      console.error("Error adding comment:", error);
-      return null;
-    }
-  };
-
-  const deleteComment = async (comment) => {
-    try {
-      const token = getToken();
-      const response = await axiosInstance.delete("/comments", {
-        headers: { Authorization: `Bearer ${token}` },
-        data: comment,
-      });
-      return response;
-    } catch (error) {
-      console.error("Error deleting comment:", error);
-      return null;
-    }
-  };
-
   return (
     <PostListContext.Provider
       value={{
@@ -162,9 +122,6 @@ const PostListProvider = ({ children }) => {
         addPost,
         deletePost,
         updatePost,
-        manageLike,
-        addComment,
-        deleteComment,
       }}
     >
       {children}

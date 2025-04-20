@@ -12,6 +12,7 @@ import EditUser from "./components/EditUser";
 import Footer from "./components/Footer";
 import NotFound from "./components/NotFound";
 import UsernamePassword from "./components/UsernamePassword";
+import CommentProvider from "./store/comment-provider";
 
 function App() {
   const { userAuthenticated } = useAuth();
@@ -23,7 +24,15 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={userAuthenticated ? <PostContainer /> : <Home />}
+            element={
+              userAuthenticated ? (
+                <CommentProvider>
+                  <PostContainer />
+                </CommentProvider>
+              ) : (
+                <Home />
+              )
+            }
           />
           <Route path="*" element={<NotFound />} />
           <Route path="/login" element={<LoginForm />} />

@@ -8,16 +8,18 @@ const PostContainer = () => {
   const { postList } = usePost();
   const { user } = useUser();
   const [filter, setFilter] = useState("all");
+
+  // Safer comparison using String coercion
   const filteredPosts = postList.filter((post) => {
     if (filter === "mine") {
-      return user?.id && post.userid === user.id;
+      return user?.id && String(post.userId) === String(user.id);
     }
-    return true;
+    return true; // "all" selected
   });
 
   return (
     <div className="min-h-screen dark:bg-gray-900 px-4 py-6 flex flex-col items-center">
-      {/* Toggle Component */}
+      {/* Filter Toggle */}
       <div className="inline-flex rounded-md shadow-sm bg-gray-100 dark:bg-gray-800 mb-6">
         <button
           onClick={() => setFilter("all")}

@@ -2,43 +2,29 @@ import React, { useEffect, useState } from "react";
 import KebabMenu from "./KebabMenu";
 import { formatDistanceToNow } from "date-fns";
 import { Heart, HeartFill, ChatDotsFill } from "react-bootstrap-icons";
-import { usePost } from "../store/post-store-provider";
 import { useUser } from "../store/user-provider";
+import { useLikeComment } from "../store/comment-provider";
 
 const Post = ({ post }) => {
-  const { getUser } = useUser();
-  const [currUser, setCurrUser] = useState(null);
-  const { manageLike, addComment, deleteComment } = usePost();
+  const { user } = useUser();
+  const { manageLike, addComment, deleteComment, loadComment } =
+    useLikeComment();
   const [likes, setLikes] = useState(post.likeCount || 0);
+  const [commentCounts, setCommentCount] = useState(post.commentCount || 0);
   const [liked, setLiked] = useState(false);
   const [commentInput, setCommentInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [comments, setComments] = useState(post.comments || []);
+  const [comments, setComments] = useState([]);
   const [showComments, setShowComments] = useState(false);
 
-  const loadUser = async () => {
-    try {
-      const response = await getUser();
-      if (response.status === 200) {
-        setCurrUser(response.data);
-      }
-    } catch (error) {
-      console.error("Failed to load user", error);
-    }
-  };
-
   useEffect(() => {
-    loadUser();
-  }, []);
-
-  useEffect(() => {
-    if (!currUser || !currUser.id) return;
+    if (!user || !user.id) return;
 
     const userAlreadyLiked = post.likedUsers?.some(
-      (u) => u.userId === currUser.id && u.postId === post.id
+      (u) => u.userId === user.id && u.postId === post.id
     );
     setLiked(userAlreadyLiked);
-  }, [post.likedUsers, currUser]);
+  }, [post.likedUsers, user]);
 
   const formatDate = (isoString) => {
     if (!isoString) return "Unknown date";
@@ -46,28 +32,44 @@ const Post = ({ post }) => {
   };
 
   const handleLike = async () => {
-    if (loading || !currUser) return;
+    if (loading || !user) return;
     setLoading(true);
 
     try {
       setLikes((prev) => (liked ? Math.max(prev - 1, 0) : prev + 1));
       setLiked(!liked);
-      await manageLike(currUser.id, post.id);
+      await manageLike(user.id, post.id);
     } catch (error) {
       console.error("Like/unlike failed:", error);
     } finally {
       setLoading(false);
     }
   };
-  const handleToggleComments = () => {
+
+  const handleToggleComments = async () => {
     setShowComments((prev) => !prev);
+    if (!comments.length && post.id) {
+      await handleOnLoadComments(post.id);
+    }
   };
 
-  const handleDeleteComment = async (comment) => {
+  const handleOnLoadComments = async (postId) => {
     try {
-      const response = await deleteComment(comment);
+      const response = await loadComment(postId);
       if (response.status === 200) {
-        setComments((prev) => prev.filter((c) => c !== comment));
+        setComments(response.data);
+      }
+    } catch (error) {
+      console.error("Failed to load comments:", error);
+    }
+  };
+
+  const handleDeleteComment = async (postId, commentId) => {
+    try {
+      const response = await deleteComment(postId, commentId);
+      if (response?.status === 200) {
+        setComments((prev) => prev.filter((c) => c.id !== commentId));
+        setCommentCount((prev) => Math.max(prev - 1, 0));
       }
     } catch (error) {
       console.error("Delete comment error:", error);
@@ -75,22 +77,28 @@ const Post = ({ post }) => {
   };
 
   const handleCommentPost = async () => {
+    if (!commentInput) return;
     try {
-      const response = await addComment(currUser.id, post.id, commentInput);
+      setLoading(true);
+      const response = await addComment(user.id, post.id, commentInput);
       if (response.status === 200) {
         const newComment = response.data;
         setComments([newComment, ...comments]);
+        setCommentCount(commentCounts + 1);
         setCommentInput("");
       }
     } catch (error) {
       console.error("Add comment error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  if (!currUser) return <p className="text-white text-2xl">Loading...</p>;
+  if (!user) return <p className="text-white text-2xl">Loading...</p>;
+
   return (
     <div className="w-full max-w-3xl mx-auto sm:mx-0">
-      <div className=" bg-white dark:bg-gray-800 dark:text-white p-5 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300">
+      <div className="bg-white dark:bg-gray-800 dark:text-white p-5 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300">
         <div className="flex justify-between items-start mb-3">
           <div className="flex items-center space-x-3">
             <img
@@ -105,7 +113,7 @@ const Post = ({ post }) => {
               </p>
             </div>
           </div>
-          {post.userid === currUser.id && <KebabMenu post={post} />}
+          {post.userid === user.id && <KebabMenu post={post} />}
         </div>
         <hr className="border-gray-200 dark:border-gray-600 my-2" />
         <div className="text-center">
@@ -141,34 +149,10 @@ const Post = ({ post }) => {
               }`}
             />
           </button>
+          <span className="text-sm">
+            {commentCounts} {commentCounts === 1 ? "comment" : "comments"}
+          </span>
         </div>
-        {Array.isArray(post.hashtags) && post.hashtags.length > 0 && (
-          <>
-            <hr className="border-gray-200 dark:border-gray-600 my-3" />
-            <div className="flex flex-wrap gap-1 p-2 bg-gray-100 dark:bg-gray-800 rounded-md">
-              {post.hashtags.map((tag, index) => (
-                <span
-                  key={index}
-                  className={`px-2 py-0.5 text-xs font-semibold rounded-full
-          ${
-            index % 5 === 0
-              ? "bg-blue-200 text-blue-900"
-              : index % 5 === 1
-              ? "bg-green-200 text-green-900"
-              : index % 5 === 2
-              ? "bg-purple-200 text-purple-900"
-              : index % 5 === 3
-              ? "bg-yellow-200 text-yellow-900"
-              : "bg-pink-200 text-pink-900"
-          }`}
-                >
-                  #{tag}
-                </span>
-              ))}
-            </div>
-            <hr className="border-gray-200 dark:border-gray-600 my-3" />
-          </>
-        )}
 
         {showComments && (
           <>
@@ -183,6 +167,7 @@ const Post = ({ post }) => {
               <button
                 className="bg-blue-500 text-white text-sm px-4 py-1.5 rounded-full hover:bg-blue-600 transition-all duration-200"
                 onClick={handleCommentPost}
+                disabled={loading}
               >
                 Post
               </button>
@@ -216,10 +201,12 @@ const Post = ({ post }) => {
                     <p className="mt-1 text-sm text-gray-800 dark:text-gray-200">
                       {comment.comment}
                     </p>
-                    {comment.username === currUser.username && (
+                    {comment.username === user.username && (
                       <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 mt-2 space-x-4">
                         <button
-                          onClick={() => handleDeleteComment(comment)}
+                          onClick={() =>
+                            handleDeleteComment(post.id, comment.id)
+                          }
                           className="hover:underline text-red-400 hover:text-red-500"
                         >
                           Delete
