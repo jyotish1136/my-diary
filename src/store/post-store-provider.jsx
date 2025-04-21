@@ -54,7 +54,6 @@ const PostListProvider = ({ children }) => {
       if (response.status === 200) {
         const newPost = response.data;
         setPostList((prevPosts) => [...prevPosts, newPost]);
-        console.log(response);
         return response;
       }
     } catch (error) {

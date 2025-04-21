@@ -6,8 +6,6 @@ const ShowAlert = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { logout } = useAuth();
-
   const message = location.state?.message ?? "";
   const type = location.state?.type ?? "error";
 
@@ -16,11 +14,10 @@ const ShowAlert = () => {
       navigate("/login");
     } else {
       const timer = setTimeout(() => {
-        navigate("/login");
+        navigate("/");
       }, 3000);
       return () => {
         clearTimeout(timer);
-        logout();
       };
     }
   }, [message, navigate]);
@@ -40,11 +37,10 @@ const ShowAlert = () => {
       <button
         className="mt-5 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded transition"
         onClick={() => {
-          navigate("/login");
-          logout();
+          navigate("/");
         }}
       >
-        Go to Login Now
+        Go to Home Page
       </button>
     </div>
   );

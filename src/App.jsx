@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Home from "./components/Home";
-import LoginForm from "./components/LoginForm";
 import CreatePost from "./components/CreatePost";
 import PostContainer from "./components/PostContainer";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -11,15 +10,19 @@ import ShowAlert from "./components/ShowAlert";
 import EditUser from "./components/EditUser";
 import Footer from "./components/Footer";
 import NotFound from "./components/NotFound";
-import UsernamePassword from "./components/UsernamePassword";
 import CommentProvider from "./store/comment-provider";
+import LoginForm from "./authentication/LoginForm";
+import Signup from "./authentication/Signup";
+import UsernamePassword from "./authentication/UsernamePassword";
+import SetUsernamePassword from "./authentication/SetUsernamePassword";
+import UserDetailsForm from "./authentication/UserDetailsForm";
 
 function App() {
   const { userAuthenticated } = useAuth();
-
   return (
     <Router>
       <Header />
+
       <div className="pt-16 dark:bg-slate-950">
         <Routes>
           <Route
@@ -36,6 +39,7 @@ function App() {
           />
           <Route path="*" element={<NotFound />} />
           <Route path="/login" element={<LoginForm />} />
+          <Route path="/signup" element={<Signup />} />
           <Route
             path="/create-post"
             element={
@@ -60,6 +64,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="/complete-signup" element={<UserDetailsForm />} />
           <Route
             path="/update-credentials"
             element={

@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 
 const UserExists = () => {
   const navigete = useNavigate();
-
   const handleOnClick = () => {
     navigete("/login");
   };

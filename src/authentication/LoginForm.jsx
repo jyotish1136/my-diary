@@ -14,7 +14,6 @@ const LoginForm = () => {
     e.preventDefault();
     setLoading(true);
     setError("");
-
     try {
       const success = await login(username, password);
       if (success.status == 200) {

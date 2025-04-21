@@ -129,7 +129,7 @@ const Post = ({ post }) => {
         <div className="flex items-center space-x-4 mt-4">
           <button
             onClick={handleLike}
-            className="focus:outline-none"
+            className="focus:outline-none flex cursor-pointer"
             disabled={loading}
           >
             {liked ? (
@@ -137,23 +137,53 @@ const Post = ({ post }) => {
             ) : (
               <Heart className="w-5 h-5" />
             )}
+            <span className="text-sm ml-2">
+              {likes >= 0 && likes} {likes <= 1 ? "like" : "likes"}
+            </span>
           </button>
-          <span className="text-sm">
-            {likes} {likes === 1 ? "like" : "likes"}
-          </span>
 
-          <button onClick={handleToggleComments}>
+          <button
+            onClick={handleToggleComments}
+            className="flex cursor-pointer"
+          >
             <ChatDotsFill
               className={`w-5 h-5 ${
                 showComments ? "text-blue-500" : "text-gray-500"
               }`}
             />
+            <span className="text-sm ml-2">
+              {commentCounts >= 0 && commentCounts}{" "}
+              {commentCounts <= 1 ? "comment" : "comments"}
+            </span>
           </button>
-          <span className="text-sm">
-            {commentCounts} {commentCounts === 1 ? "comment" : "comments"}
-          </span>
         </div>
-
+        {Array.isArray(post.hashtags) && post.hashtags.length > 0 && (
+          <>
+            <hr className="border-gray-200 dark:border-gray-600 my-3" />
+            <div className="flex flex-wrap gap-1 p-2 bg-gray-100 dark:bg-gray-800 rounded-md">
+              {post.hashtags.map((tag, index) => (
+                <span
+                  key={index}
+                  className={`px-2 py-0.5 text-xs font-semibold rounded-full
+                  ${
+                    index % 5 === 0
+                      ? "bg-blue-200 text-blue-900"
+                      : index % 5 === 1
+                      ? "bg-green-200 text-green-900"
+                      : index % 5 === 2
+                      ? "bg-purple-200 text-purple-900"
+                      : index % 5 === 3
+                      ? "bg-yellow-200 text-yellow-900"
+                      : "bg-pink-200 text-pink-900"
+                  }`}
+                >
+                  #{tag}
+                </span>
+              ))}
+            </div>
+            <hr className="border-gray-200 dark:border-gray-600 my-3" />
+          </>
+        )}
         {showComments && (
           <>
             <div className="mt-4 flex items-center space-x-2">

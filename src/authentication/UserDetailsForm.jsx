@@ -2,41 +2,43 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useUser } from "../store/user-provider";
+import { useAuth } from "../context/AuthContext";
 
 const UserDetailsForm = () => {
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+  const [username, setUsername] = useState("");
+  const [tempToken, setTempToken] = useState("");
+  const [usernameError, setUsernameError] = useState("");
+  const [usernameSuccess, setUsernameSuccess] = useState("");
   const navigate = useNavigate();
-  const { updateUser } = useUser();
+  const { validateUser } = useUser();
+  const { signup } = useAuth();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("tempToken");
+    if (token != null && token != "") {
+      setTempToken(token);
+    }
+  }, []);
 
   const [formData, setFormData] = useState({
     firstname: "",
     lastname: "",
     password: "",
   });
-  const validate = () => {
-    const tempErrors = {};
-
-    if (!formData.firstname.trim())
-      tempErrors.firstname = "First name is required!";
-    if (!formData.lastname.trim())
-      tempErrors.lastname = "Last name is required!";
-    if (!formData.password.trim() || formData.password.length < 6) {
-      tempErrors.password = "Password must be at least 6 characters!";
-    }
-    setErrors(tempErrors);
-    return Object.keys(tempErrors).length === 0;
-  };
-
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await updateUser(
+      const response = await signup(
+        tempToken,
         formData.firstname,
         formData.lastname,
+        username,
         formData.password
       );
       if (response.status == 200) {
@@ -55,13 +57,39 @@ const UserDetailsForm = () => {
         });
       }
     } catch (error) {
-      console.error("Error updating user:", error);
+      console.error("Error signup user:", error);
       navigate("/show-alert", {
         state: { message: "Network error! Please try again.", type: "error" },
       });
     }
   };
+  const handleUsernameValidation = async () => {
+    setUsernameError("");
+    setUsernameSuccess("");
 
+    if (username.length < 4) {
+      setUsernameError("Username must be at least 4 characters.");
+      return;
+    }
+
+    if (!/^[a-z0-9._]+$/.test(username)) {
+      setUsernameError(
+        "Only lowercase letters, numbers, '.', and '_' are allowed."
+      );
+      return;
+    }
+
+    try {
+      const response = await validateUser(username);
+      if (response.status === 200 && response.data.exists) {
+        setUsernameError("Username is already taken.");
+      } else {
+        setUsernameSuccess("Username is available!");
+      }
+    } catch (error) {
+      setUsernameError("Error checking username.");
+    }
+  };
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-900 text-white px-4">
       <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
@@ -91,7 +119,32 @@ const UserDetailsForm = () => {
               )}
             </div>
           ))}
-
+          <div className="relative w-full mb-4">
+            <label className="block mb-1 text-sm capitalize">
+              username
+              <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => {
+                setUsername(e.target.value);
+                setUsernameError("");
+                setUsernameSuccess("");
+              }}
+              onBlur={handleUsernameValidation}
+              className={`w-full px-4 py-2 border rounded-md ${
+                usernameError ? "border-red-500" : "border-gray-300"
+              } dark:bg-gray-700 dark:text-white`}
+            />
+            {usernameError && (
+              <p className="text-red-500 text-sm mt-1">{usernameError}</p>
+            )}
+            {usernameSuccess && (
+              <p className="text-green-500 text-sm mt-1">{usernameSuccess}</p>
+            )}
+          </div>
           <div className="relative">
             <label className="block mb-1 text-sm">
               Password <span className="text-red-500">*</span>

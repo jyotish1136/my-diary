@@ -3,7 +3,7 @@ import Post from "./Post";
 import { usePost } from "../store/post-store-provider";
 import { useUser } from "../store/user-provider";
 import NoPosts from "./NoPosts";
-
+import AddButton from "./AddButton";
 const PostContainer = () => {
   const { postList } = usePost();
   const { user } = useUser();
@@ -54,6 +54,7 @@ const PostContainer = () => {
           ))}
         </div>
       )}
+      <AddButton />
     </div>
   );
 };

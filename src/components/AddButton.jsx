@@ -1,21 +1,16 @@
 import React from "react";
-import { useAuth } from "../context/AuthContext";
+import { Plus } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
-import { Plus } from "lucide-react"; // Importing an icon
 
 const AddButton = () => {
-  const { userAuthenticated } = useAuth();
   const navigate = useNavigate();
-
   return (
-    userAuthenticated && (
-      <button
-        className="fixed bottom-10 right-10 flex items-center justify-center bg-blue-500 text-white rounded-full w-14 h-14 shadow-lg hover:bg-blue-600 transition-all duration-300"
-        onClick={() => navigate("/create-post")}
-      >
-        <Plus size={24} />
-      </button>
-    )
+    <button
+      onClick={() => navigate("/create-post")}
+      className="fixed bottom-6 right-6 lg:bottom-8 lg:right-8 bg-blue-500 text-white p-3 md:p-4 rounded-full shadow-lg hover:bg-blue-600 transition-all duration-300 z-50"
+    >
+      <Plus className="w-6 h-6" />
+    </button>
   );
 };
 

@@ -39,9 +39,22 @@ const CreatePost = () => {
     }
   };
 
+  const handleCancel = () => {
+    // Clear the form fields when Cancel is clicked
+    setTitle("");
+    setContent("");
+    setVisibility("PUBLIC");
+    setHashtags("");
+    setError(false);
+    setUploading(false);
+
+    // Navigate to the previous page or home
+    navigate("/");
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-      <div className="shadow-lg p-6 rounded-2xl max-w-md w-full bg-white dark:bg-gray-800">
+      <div className="shadow-lg p-6 rounded-2xl max-w-md w-full bg-white dark:bg-gray-800 mx-2">
         <h4 className="text-center mb-4 text-black dark:text-white text-xl font-semibold">
           Create Post
         </h4>
@@ -80,7 +93,7 @@ const CreatePost = () => {
             <input
               type="text"
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
-              placeholder="e.g hello post enjoy"
+              placeholder="hashtags e.g happy mood"
               value={hashtags}
               onChange={(e) => setHashtags(e.target.value)}
             />
@@ -100,13 +113,22 @@ const CreatePost = () => {
             </select>
           </div>
 
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition-all duration-300 disabled:bg-gray-400"
-            disabled={uploading}
-          >
-            {uploading ? "Posting..." : "Post"}
-          </button>
+          <div className="flex justify-evenly">
+            <button
+              type="button"
+              className="w-1/3 ml-3 bg-slate-700 text-white py-3 rounded-lg hover:bg-blue-600 transition-all duration-300 disabled:bg-gray-400"
+              onClick={handleCancel} // Call the handleCancel function
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="w-1/2 bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition-all duration-300 disabled:bg-gray-400"
+              disabled={uploading}
+            >
+              {uploading ? "Posting..." : "Post"}
+            </button>
+          </div>
         </form>
       </div>
     </div>
