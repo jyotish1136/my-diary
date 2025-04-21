@@ -125,7 +125,7 @@ const Post = ({ post }) => {
         <p className="text-gray-800 dark:text-gray-200 whitespace-pre-line break-words">
           {post.content}
         </p>
-
+        <hr className="border-gray-200 dark:border-gray-600 my-2" />
         <div className="flex items-center space-x-4 mt-4">
           <button
             onClick={handleLike}
